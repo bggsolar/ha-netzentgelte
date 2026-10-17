@@ -67,10 +67,15 @@ def test_preisblatt_links():
         '<a href="/-/media/strom/s_preisblatt_2027_vorlaeufig.pdf?rev=def">2027</a>'
         '<a href="/-/media/gas/g_preisblatt_2026.pdf">Gas</a>'
         '<a href="/-/media/strom/s_preisblatt_2026.pdf?rev=abc&amp;x=1">doppelt</a>'
+        '<a href="/-/media/strom/s_referenzpreisblatt.pdf?rev=1&amp;hash=2">Referenz</a>'
+        '<a href="/-/media/strom/s_preisblatt-waermepumpen.pdf?rev=3">Wärmepumpen</a>'
+        '<a href="/-/media/strom/s_2027_schattenpreis_u_preisvergleich_ohne_bundeszuschuss.pdf">Zuschuss</a>'
+        '<a href="/-/media/strom/s_preisblatt-2022.pdf?rev=4">2022</a>'
     )
     links = preisblatt_links(seite, "https://www.mainzer-netze.de/strom/netzzugang/netzentgelte")
     assert links == [
         "https://www.mainzer-netze.de/-/media/strom/s_preisblatt_2026.pdf?rev=abc&x=1",
         "https://www.mainzer-netze.de/-/media/strom/s_preisblatt_2027_vorlaeufig.pdf?rev=def",
+        "https://www.mainzer-netze.de/-/media/strom/s_preisblatt-2022.pdf?rev=4",
     ]
     assert jahr_aus_url(links[1]) == 2027
