@@ -1,0 +1,15 @@
+{
+  "domain": "netzentgelte",
+  "name": "Netzentgelte & Umlagen",
+  "codeowners": ["@bggsolar"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/bggsolar/ha-netzentgelte",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/bggsolar/ha-netzentgelte/issues",
+  "loggers": ["custom_components.netzentgelte"],
+  "requirements": ["pypdf>=5.0.0"],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

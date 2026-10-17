@@ -1,0 +1,6 @@
+{
+  "name": "Netzentgelte & Umlagen",
+  "homeassistant": "2025.6.0",
+  "render_readme": true,
+  "country": ["DE"]
+}

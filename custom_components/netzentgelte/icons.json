@@ -1,0 +1,32 @@
+{
+  "services": {
+    "aktualisieren": {
+      "service": "mdi:refresh"
+    },
+    "wert_uebernehmen": {
+      "service": "mdi:check-decagram"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "netz_grundpreis": {
+        "default": "mdi:cash"
+      },
+      "modul1_reduzierung": {
+        "default": "mdi:cash-minus"
+      },
+      "gesamtpreis_standard": {
+        "default": "mdi:currency-eur"
+      },
+      "gesamtpreis_modul3": {
+        "default": "mdi:currency-eur"
+      },
+      "mwst": {
+        "default": "mdi:percent"
+      },
+      "modul3_aktuell": {
+        "default": "mdi:clock-time-four-outline"
+      }
+    }
+  }
+}

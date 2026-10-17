@@ -1,0 +1,140 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Grid fees & levies",
+        "data": {
+          "epex_entity": "EPEX spot sensor (net market price)",
+          "stromsteuer": "Electricity tax",
+          "konzessionsabgabe": "Concession fee",
+          "lieferant_aufschlag": "Supplier markup",
+          "mwst": "VAT",
+          "plausi_grenze": "Plausibility limit",
+          "preisblatt_seite": "Grid fee overview page",
+          "preisblatt_urls": "Price sheet URLs (optional)"
+        },
+        "data_description": {
+          "epex_entity": "Sensor with the pure market price without surcharges. Leave empty to skip total price sensors.",
+          "stromsteuer": "ct/kWh net",
+          "konzessionsabgabe": "ct/kWh net",
+          "lieferant_aufschlag": "ct/kWh net",
+          "mwst": "percent",
+          "plausi_grenze": "New values deviating more than this are only reported, not applied.",
+          "preisblatt_seite": "Page linking the PDF price sheets",
+          "preisblatt_urls": "One URL per line; replaces the overview page search"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Already configured",
+      "single_instance_allowed": "Only a single instance is allowed"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Grid fees & levies",
+        "data": {
+          "epex_entity": "EPEX spot sensor (net market price)",
+          "stromsteuer": "Electricity tax",
+          "konzessionsabgabe": "Concession fee",
+          "lieferant_aufschlag": "Supplier markup",
+          "mwst": "VAT",
+          "plausi_grenze": "Plausibility limit",
+          "preisblatt_seite": "Grid fee overview page",
+          "preisblatt_urls": "Price sheet URLs (optional)"
+        },
+        "data_description": {
+          "epex_entity": "Sensor with the pure market price without surcharges. Leave empty to skip total price sensors.",
+          "stromsteuer": "ct/kWh net",
+          "konzessionsabgabe": "ct/kWh net",
+          "lieferant_aufschlag": "ct/kWh net",
+          "mwst": "percent",
+          "plausi_grenze": "New values deviating more than this are only reported, not applied.",
+          "preisblatt_seite": "Page linking the PDF price sheets",
+          "preisblatt_urls": "One URL per line; replaces the overview page search"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "netz_arbeitspreis": {
+        "name": "Grid fee energy price"
+      },
+      "netz_grundpreis": {
+        "name": "Grid fee base price"
+      },
+      "modul1_reduzierung": {
+        "name": "§14a module 1 reduction"
+      },
+      "modul2_arbeitspreis": {
+        "name": "§14a module 2 energy price"
+      },
+      "modul3_ht": {
+        "name": "§14a module 3 peak"
+      },
+      "modul3_st": {
+        "name": "§14a module 3 standard"
+      },
+      "modul3_nt": {
+        "name": "§14a module 3 off-peak"
+      },
+      "modul3_aktuell": {
+        "name": "§14a module 3 current"
+      },
+      "kwkg_umlage": {
+        "name": "CHP levy"
+      },
+      "offshore_netzumlage": {
+        "name": "Offshore grid levy"
+      },
+      "aufschlag_besondere_netznutzung": {
+        "name": "Special grid usage surcharge"
+      },
+      "stromsteuer": {
+        "name": "Electricity tax"
+      },
+      "konzessionsabgabe": {
+        "name": "Concession fee"
+      },
+      "lieferant_aufschlag": {
+        "name": "Supplier markup"
+      },
+      "mwst": {
+        "name": "VAT"
+      },
+      "gesamtpreis_standard": {
+        "name": "Total price standard"
+      },
+      "gesamtpreis_modul3": {
+        "name": "Total price module 3"
+      }
+    }
+  },
+  "exceptions": {
+    "kein_abgewiesener_wert": {
+      "message": "No rejected value for {bestandteil} from {gueltig_ab}."
+    }
+  },
+  "services": {
+    "aktualisieren": {
+      "name": "Refresh",
+      "description": "Fetch price sheets and levies now."
+    },
+    "wert_uebernehmen": {
+      "name": "Accept value",
+      "description": "Accept a value rejected by the plausibility limit.",
+      "fields": {
+        "bestandteil": {
+          "name": "Component",
+          "description": "Component key, e.g. modul3_ht"
+        },
+        "gueltig_ab": {
+          "name": "Valid from",
+          "description": "Effective date of the rejected value"
+        }
+      }
+    }
+  }
+}
