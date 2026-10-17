@@ -176,7 +176,7 @@ class NetzentgelteCoordinator(DataUpdateCoordinator[Fahrplan]):
                 continue
             self._fehler_ok(url)
             kandidaten += [
-                Eintrag(key, wert, ergebnis.gueltig_ab, url, abgerufen, ergebnis.vorlaeufig)
+                Eintrag(key, wert, ergebnis.gueltig_ab_fuer(key), url, abgerufen, ergebnis.vorlaeufig)
                 for key, wert in ergebnis.werte.items()
             ]
         return kandidaten

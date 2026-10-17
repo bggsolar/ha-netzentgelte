@@ -33,6 +33,9 @@ def test_preisblatt(datei):
     assert ergebnis.vorlaeufig is erwartet["vorlaeufig"]
     for key, wert in erwartet["werte"].items():
         assert ergebnis.werte.get(key) == wert, key
+    modul3_ab = date.fromisoformat(erwartet.get("modul3_gueltig_ab", erwartet["gueltig_ab"]))
+    assert ergebnis.gueltig_ab_fuer("modul3_nt") == modul3_ab
+    assert ergebnis.gueltig_ab_fuer("netz_arbeitspreis") == ergebnis.gueltig_ab
 
 
 @pytest.mark.parametrize("datei", sorted(set(p.name for p in ORDNER.glob("*.pdf")) - set(ERWARTET)))

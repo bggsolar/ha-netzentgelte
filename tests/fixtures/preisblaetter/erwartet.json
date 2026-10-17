@@ -1,27 +1,84 @@
 {
   "_hinweis": "Erwartete Werte je Preisblatt-Datei. Tests laufen fuer jede vorhandene Datei. Originale: s_preisblatt_JJJJ.pdf von mainzer-netze.de.",
   "synthetisch_s_preisblatt_2026.pdf": {
-    "gueltig_ab": "2026-01-01", "vorlaeufig": false,
-    "werte": {"netz_grundpreis": 75.0, "netz_arbeitspreis": 6.72, "modul1_reduzierung": 117.63, "modul2_arbeitspreis": 2.69,
-              "modul3_ht": 7.86, "modul3_st": 6.72, "modul3_nt": 1.01, "modul3_ht_zeitfenster": "16:45-20:00",
-              "modul3_nt_zeitfenster": "22:00-06:00", "modul3_quartale": "1,4"}
+    "gueltig_ab": "2026-01-01",
+    "vorlaeufig": false,
+    "werte": {
+      "netz_grundpreis": 75.0,
+      "netz_arbeitspreis": 6.72,
+      "modul1_reduzierung": 117.63,
+      "modul2_arbeitspreis": 2.69,
+      "modul3_ht": 7.86,
+      "modul3_st": 6.72,
+      "modul3_nt": 1.01,
+      "modul3_ht_zeitfenster": "16:45-20:00",
+      "modul3_nt_zeitfenster": "22:00-06:00",
+      "modul3_quartale": "1,4"
+    }
   },
   "synthetisch_s_preisblatt_2027_vorlaeufig.pdf": {
-    "gueltig_ab": "2027-01-01", "vorlaeufig": true,
-    "werte": {"netz_grundpreis": 90.0, "netz_arbeitspreis": 6.11, "modul1_reduzierung": 113.05, "modul2_arbeitspreis": 2.44,
-              "modul3_ht": 11.0, "modul3_st": 6.11, "modul3_nt": 1.22, "modul3_ht_zeitfenster": "16:45-19:45",
-              "modul3_nt_zeitfenster": "22:00-06:00", "modul3_quartale": "1,4"}
+    "gueltig_ab": "2027-01-01",
+    "vorlaeufig": true,
+    "werte": {
+      "netz_grundpreis": 90.0,
+      "netz_arbeitspreis": 6.11,
+      "modul1_reduzierung": 113.05,
+      "modul2_arbeitspreis": 2.44,
+      "modul3_ht": 11.0,
+      "modul3_st": 6.11,
+      "modul3_nt": 1.22,
+      "modul3_ht_zeitfenster": "16:45-19:45",
+      "modul3_nt_zeitfenster": "22:00-06:00",
+      "modul3_quartale": "1,4"
+    }
   },
   "s_preisblatt_2026.pdf": {
-    "gueltig_ab": "2026-01-01", "vorlaeufig": false,
-    "werte": {"netz_grundpreis": 75.0, "netz_arbeitspreis": 6.72, "modul1_reduzierung": 117.63, "modul2_arbeitspreis": 2.69,
-              "modul3_ht": 7.86, "modul3_st": 6.72, "modul3_nt": 1.01, "modul3_ht_zeitfenster": "16:45-20:00",
-              "modul3_nt_zeitfenster": "22:00-06:00", "modul3_quartale": "1,4"}
+    "gueltig_ab": "2026-01-01",
+    "vorlaeufig": false,
+    "werte": {
+      "netz_grundpreis": 75.0,
+      "netz_arbeitspreis": 6.72,
+      "modul1_reduzierung": 117.63,
+      "modul2_arbeitspreis": 2.69,
+      "modul3_ht": 7.86,
+      "modul3_st": 6.72,
+      "modul3_nt": 1.01,
+      "modul3_ht_zeitfenster": "16:45-20:00",
+      "modul3_nt_zeitfenster": "22:00-06:00",
+      "modul3_quartale": "1,4"
+    }
   },
   "s_preisblatt_2027_vorlaeufig.pdf": {
-    "gueltig_ab": "2027-01-01", "vorlaeufig": true,
-    "werte": {"netz_grundpreis": 90.0, "netz_arbeitspreis": 6.11, "modul1_reduzierung": 113.05, "modul2_arbeitspreis": 2.44,
-              "modul3_ht": 11.0, "modul3_st": 6.11, "modul3_nt": 1.22, "modul3_ht_zeitfenster": "16:45-19:45",
-              "modul3_nt_zeitfenster": "22:00-06:00", "modul3_quartale": "1,4"}
+    "gueltig_ab": "2027-01-01",
+    "vorlaeufig": true,
+    "werte": {
+      "netz_grundpreis": 90.0,
+      "netz_arbeitspreis": 6.11,
+      "modul1_reduzierung": 113.05,
+      "modul2_arbeitspreis": 2.44,
+      "modul3_ht": 11.0,
+      "modul3_st": 6.11,
+      "modul3_nt": 1.22,
+      "modul3_ht_zeitfenster": "16:45-19:45",
+      "modul3_nt_zeitfenster": "22:00-06:00",
+      "modul3_quartale": "1,4"
+    }
+  },
+  "s_preisblatt_2025.pdf": {
+    "gueltig_ab": "2025-01-01",
+    "vorlaeufig": false,
+    "modul3_gueltig_ab": "2025-04-01",
+    "werte": {
+      "netz_grundpreis": 60.0,
+      "netz_arbeitspreis": 10.18,
+      "modul1_reduzierung": 143.58,
+      "modul2_arbeitspreis": 4.07,
+      "modul3_ht": 17.73,
+      "modul3_st": 10.18,
+      "modul3_nt": 2.55,
+      "modul3_ht_zeitfenster": "17:00-20:00",
+      "modul3_nt_zeitfenster": "22:00-06:00",
+      "modul3_quartale": "1,4"
+    }
   }
 }

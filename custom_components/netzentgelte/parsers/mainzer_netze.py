@@ -31,6 +31,11 @@ class PreisblattErgebnis:
     vorlaeufig: bool
     quelle: str
     werte: dict[str, Any] = field(default_factory=dict)
+    # Abweichender Gültigkeitsbeginn einzelner Werte (z. B. Modul 3 "gültig ab 01.04.2025")
+    gueltig_ab_je_key: dict[str, date] = field(default_factory=dict)
+
+    def gueltig_ab_fuer(self, key: str) -> date:
+        return self.gueltig_ab_je_key.get(key, self.gueltig_ab)
 
 
 def pdf_text(daten: bytes) -> str:
@@ -148,9 +153,19 @@ def parse_preisblatt(text: str, quelle: str = "") -> PreisblattErgebnis:
         w["modul3_nt"] = zahl(m.group(4) or m.group(3))
     if m := _erster(r"(?:Standardtarif|\bST\b)[^,]{0,120}?" + ZAHL, modul3):
         w["modul3_st"] = zahl(m.group(1))
-    quartale = sorted({int(q) for q in re.findall(r"(?:Quartal\s*|\bQ)([1-4])\b", modul3)})
+    # Quartale aus den Tabellenzeilen ("Quartal 1 HT-Zeiten …"), nicht aus Fußnoten wie
+    # "In Quartal 2 und 3 gilt der Standardtarif"
+    quartale = re.findall(r"Quartal\s*([1-4])\s*(?:HT|Hochtarif)", modul3, re.IGNORECASE)
+    if not quartale:
+        quartale = re.findall(r"(?<!In )(?:Quartal\s*|\bQ)([1-4])\b(?!\s*und\s*\d\s*gilt)", modul3)
     if quartale:
-        w["modul3_quartale"] = ",".join(str(q) for q in quartale)
+        w["modul3_quartale"] = ",".join(str(q) for q in sorted({int(q) for q in quartale}))
+    if m := _erster(r"gültig\s+ab\s+(\d{1,2})\.\s?(\d{1,2})\.\s?(20\d{2})", modul3[:200]):
+        beginn = date(int(m.group(3)), int(m.group(2)), int(m.group(1)))
+        if beginn != ergebnis.gueltig_ab:
+            for key in w:
+                if key.startswith("modul3_"):
+                    ergebnis.gueltig_ab_je_key[key] = beginn
 
     if "netz_arbeitspreis" not in w or "netz_grundpreis" not in w:
         raise PreisblattFehler("Grund- oder Arbeitspreis (ohne Leistungsmessung) nicht gefunden")
