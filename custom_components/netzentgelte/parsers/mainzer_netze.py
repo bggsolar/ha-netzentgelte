@@ -17,9 +17,6 @@ from urllib.parse import urljoin
 ZAHL = r"(\d{1,4},\d{2,3})"
 ZEIT = r"(\d{1,2}[:.]\d{2})"
 BIS = r"\s*(?:Uhr)?\s*(?:bis|-|–|—)\s*"
-EUR_A = r"(?:€|EUR|Euro)\s*/\s*(?:a|Jahr)\b"
-CT_KWH = r"ct\s*/\s*kWh"
-EUR = r"(?:€|EUR|Euro)(?!\s*/)"
 
 
 class PreisblattFehler(Exception):
@@ -56,6 +53,10 @@ def zahl(text: str) -> float:
     return float(text.replace(".", "").replace(",", "."))
 
 
+def _zahlen(text: str) -> list[float]:
+    return [zahl(z) for z in re.findall(ZAHL, text)]
+
+
 def _norm(text: str) -> str:
     text = text.replace(" ", " ").replace(" ", " ")
     return re.sub(r"\s+", " ", text)
@@ -84,21 +85,6 @@ def _abschnitt(text: str, start: str, ende: list[str], pflicht: str | None = Non
 def _erster(muster: str, text: str) -> re.Match[str] | None:
     return re.search(muster, text, re.IGNORECASE)
 
-
-def _betrag(text: str, einheit: str, nach: str = "") -> float | None:
-    """Erste Zahl mit Einheit ("75,00 €/a" oder "€/a 75,00"), optional erst nach Muster `nach`."""
-    if nach:
-        m = _erster(nach, text)
-        if m is None:
-            return None
-        text = text[m.end():]
-    m = _erster(ZAHL + r"\s*" + einheit, text) or _erster(einheit + r"\s*" + ZAHL, text)
-    return zahl(m.group(1)) if m else None
-
-
-def _setzen(werte: dict[str, Any], key: str, wert: float | None) -> None:
-    if wert is not None:
-        werte[key] = wert
 
 
 def gueltig_ab_ermitteln(text: str, url: str = "") -> date:
@@ -130,34 +116,36 @@ def parse_preisblatt(text: str, quelle: str = "") -> PreisblattErgebnis:
     )
     w = ergebnis.werte
 
-    # Standard: Entnahme ohne Leistungsmessung (Niederspannung)
-    slp = _abschnitt(
-        t,
-        r"ohne\s+Leistungsmessung",
-        [r"§\s*14\s*a", r"Modul\s*1", r"Preisblatt\s*\d"],
-        pflicht=r"Arbeitspreis",
+    # Die Preisblätter sind Tabellen: Spaltenköpfe ("Grundpreis [€/a]", "Arbeitspreis [ct/kWh]")
+    # stehen vor der Wertezeile ("90,00 6,11"). Gelesen wird daher die Reihenfolge der Zahlen
+    # im jeweiligen Abschnitt; Abschnitte ohne Zahl (Inhaltsverzeichnis) werden übersprungen.
+
+    # Preisblatt 2: Entnahme ohne Leistungsmessung (Niederspannung) -> Grundpreis, Arbeitspreis
+    slp = _abschnitt(t, r"Preisblatt\s*2\b", [r"Preisblatt\s*\d", r"§\s*14\s*a"], pflicht=ZAHL)
+    if len(n := _zahlen(slp)) >= 2:
+        w["netz_grundpreis"], w["netz_arbeitspreis"] = n[0], n[1]
+
+    # § 14a Modul 1: Grundpreis, Arbeitspreis, Netzentgeltreduzierung [€]
+    modul1 = _abschnitt(
+        t, r"Modul\s*1\b", [r"Modul\s*2\b", r"mit\s+Leistungsmessung", r"Preisblatt\s*\d"], pflicht=ZAHL
     )
-    _setzen(w, "netz_grundpreis", _betrag(slp, EUR_A))
-    _setzen(w, "netz_arbeitspreis", _betrag(slp, CT_KWH))
+    if len(n := _zahlen(modul1)) >= 3:
+        w["modul1_reduzierung"] = n[2]
 
-    # § 14a Modul 1: pauschale Netzentgeltreduzierung (Betrag in €, nicht €/a)
-    modul1 = _abschnitt(t, r"Modul\s*1", [r"Modul\s*2", r"Preisblatt\s*\d"], pflicht=r"reduzierung")
-    _setzen(w, "modul1_reduzierung", _betrag(modul1, EUR, nach=r"reduzierung"))
+    # § 14a Modul 2: Grundpreis, Arbeitspreis
+    modul2 = _abschnitt(t, r"Modul\s*2\b", [r"Modul\s*3\b", r"Preisblatt\s*\d"], pflicht=ZAHL)
+    if len(n := _zahlen(modul2)) >= 2:
+        w["modul2_arbeitspreis"] = n[1]
 
-    # § 14a Modul 2: prozentuale Arbeitspreisreduzierung
-    modul2 = _abschnitt(t, r"Modul\s*2", [r"Modul\s*3", r"Preisblatt\s*\d"], pflicht=r"Arbeitspreis")
-    _setzen(w, "modul2_arbeitspreis", _betrag(modul2, CT_KWH))
-
-    # § 14a Modul 3: zeitvariable Netzentgelte
-    modul3 = _abschnitt(
-        t, r"Modul\s*3", [r"Preisblatt\s*\d", r"Messeinrichtung", r"Konzessionsabgabe"], pflicht=r"Hochtarif|\bHT\b"
-    )
-    if m := _erster(r"(?:Hochtarif|\bHT\b)\D{0,40}?" + ZEIT + BIS + ZEIT + r"\D{0,40}?" + ZAHL, modul3):
+    # § 14a Modul 3: Zeilen "HT-Zeiten 16:45 – 19:45 Uhr [Grundpreis] Arbeitspreis" usw.
+    modul3 = _abschnitt(t, r"Modul\s*3\b", [r"Preisblatt\s*\d"], pflicht=r"Hochtarif|\bHT\b")
+    zeile = r"\D{0,40}?" + ZEIT + BIS + ZEIT + r"\s*(?:Uhr)?\s*" + ZAHL + r"(?:\s*" + ZAHL + r")?"
+    if m := _erster(r"(?:Hochtarif|\bHT\b)" + zeile, modul3):
         w["modul3_ht_zeitfenster"] = f"{_zeit(m.group(1))}-{_zeit(m.group(2))}"
-        w["modul3_ht"] = zahl(m.group(3))
-    if m := _erster(r"(?:Niedertarif|\bNT\b)\D{0,40}?" + ZEIT + BIS + ZEIT + r"\D{0,40}?" + ZAHL, modul3):
+        w["modul3_ht"] = zahl(m.group(4) or m.group(3))
+    if m := _erster(r"(?:Niedertarif|\bNT\b)" + zeile, modul3):
         w["modul3_nt_zeitfenster"] = f"{_zeit(m.group(1))}-{_zeit(m.group(2))}"
-        w["modul3_nt"] = zahl(m.group(3))
+        w["modul3_nt"] = zahl(m.group(4) or m.group(3))
     if m := _erster(r"(?:Standardtarif|\bST\b)[^,]{0,120}?" + ZAHL, modul3):
         w["modul3_st"] = zahl(m.group(1))
     quartale = sorted({int(q) for q in re.findall(r"(?:Quartal\s*|\bQ)([1-4])\b", modul3)})
