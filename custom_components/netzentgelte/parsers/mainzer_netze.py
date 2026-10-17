@@ -173,12 +173,16 @@ def parse_preisblatt(text: str, quelle: str = "") -> PreisblattErgebnis:
 
 
 def preisblatt_links(seite_html: str, basis_url: str) -> list[str]:
-    """Links auf Strom-Preisblätter (PDF) aus der Übersichtsseite."""
+    """Links auf die Jahres-Preisblätter Strom (PDF) aus der Übersichtsseite.
+
+    Nur Dateien wie "s_preisblatt_2026.pdf" oder "s_preisblatt-2022.pdf": Das Referenzpreisblatt
+    und das Preisblatt für Wärmepumpen tragen kein Jahr und enthalten keine SLP-Netzentgelte.
+    """
     links: list[str] = []
     for href in re.findall(r'href="([^"]+?\.pdf[^"]*)"', seite_html, re.IGNORECASE):
         href = html.unescape(href)
         dateiname = href.split("?", 1)[0].rsplit("/", 1)[-1].lower()
-        if "preisblatt" in dateiname and dateiname.startswith("s_"):
+        if re.match(r"s_preisblatt[_-]?20\d{2}", dateiname):
             url = urljoin(basis_url, href)
             if url not in links:
                 links.append(url)
