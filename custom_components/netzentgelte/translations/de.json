@@ -1,0 +1,140 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Netzentgelte & Umlagen",
+        "data": {
+          "epex_entity": "EPEX-Spot-Sensor (reiner Börsenpreis, netto)",
+          "stromsteuer": "Stromsteuer",
+          "konzessionsabgabe": "Konzessionsabgabe",
+          "lieferant_aufschlag": "Lieferantenaufschlag",
+          "mwst": "Mehrwertsteuer",
+          "plausi_grenze": "Plausibilitätsgrenze",
+          "preisblatt_seite": "Übersichtsseite Netzentgelte",
+          "preisblatt_urls": "Preisblatt-URLs (optional)"
+        },
+        "data_description": {
+          "epex_entity": "Sensor mit dem Börsenpreis ohne Aufschläge, z. B. aus der EPEX-Spot-Integration. Leer lassen, wenn keine Gesamtpreis-Sensoren gewünscht sind.",
+          "stromsteuer": "ct/kWh netto",
+          "konzessionsabgabe": "ct/kWh netto; Mainz: KAV-Höchstsatz Tarifkunden 1,99",
+          "lieferant_aufschlag": "ct/kWh netto, z. B. Beschaffungsaufschlag des dynamischen Tarifs",
+          "mwst": "Prozent",
+          "plausi_grenze": "Neue Werte, die mehr als diesen Anteil vom bisherigen Wert abweichen, werden nicht übernommen, sondern nur gemeldet.",
+          "preisblatt_seite": "Seite, auf der die PDF-Preisblätter verlinkt sind",
+          "preisblatt_urls": "Eine URL je Zeile; ersetzt die Suche auf der Übersichtsseite"
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Bereits eingerichtet",
+      "single_instance_allowed": "Nur eine Instanz möglich"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Netzentgelte & Umlagen",
+        "data": {
+          "epex_entity": "EPEX-Spot-Sensor (reiner Börsenpreis, netto)",
+          "stromsteuer": "Stromsteuer",
+          "konzessionsabgabe": "Konzessionsabgabe",
+          "lieferant_aufschlag": "Lieferantenaufschlag",
+          "mwst": "Mehrwertsteuer",
+          "plausi_grenze": "Plausibilitätsgrenze",
+          "preisblatt_seite": "Übersichtsseite Netzentgelte",
+          "preisblatt_urls": "Preisblatt-URLs (optional)"
+        },
+        "data_description": {
+          "epex_entity": "Sensor mit dem Börsenpreis ohne Aufschläge, z. B. aus der EPEX-Spot-Integration. Leer lassen, wenn keine Gesamtpreis-Sensoren gewünscht sind.",
+          "stromsteuer": "ct/kWh netto",
+          "konzessionsabgabe": "ct/kWh netto; Mainz: KAV-Höchstsatz Tarifkunden 1,99",
+          "lieferant_aufschlag": "ct/kWh netto, z. B. Beschaffungsaufschlag des dynamischen Tarifs",
+          "mwst": "Prozent",
+          "plausi_grenze": "Neue Werte, die mehr als diesen Anteil vom bisherigen Wert abweichen, werden nicht übernommen, sondern nur gemeldet.",
+          "preisblatt_seite": "Seite, auf der die PDF-Preisblätter verlinkt sind",
+          "preisblatt_urls": "Eine URL je Zeile; ersetzt die Suche auf der Übersichtsseite"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "netz_arbeitspreis": {
+        "name": "Netzentgelt Arbeitspreis"
+      },
+      "netz_grundpreis": {
+        "name": "Netzentgelt Grundpreis"
+      },
+      "modul1_reduzierung": {
+        "name": "§14a Modul 1 Reduzierung"
+      },
+      "modul2_arbeitspreis": {
+        "name": "§14a Modul 2 Arbeitspreis"
+      },
+      "modul3_ht": {
+        "name": "§14a Modul 3 Hochtarif"
+      },
+      "modul3_st": {
+        "name": "§14a Modul 3 Standardtarif"
+      },
+      "modul3_nt": {
+        "name": "§14a Modul 3 Niedertarif"
+      },
+      "modul3_aktuell": {
+        "name": "§14a Modul 3 aktuell"
+      },
+      "kwkg_umlage": {
+        "name": "KWKG-Umlage"
+      },
+      "offshore_netzumlage": {
+        "name": "Offshore-Netzumlage"
+      },
+      "aufschlag_besondere_netznutzung": {
+        "name": "Aufschlag besondere Netznutzung"
+      },
+      "stromsteuer": {
+        "name": "Stromsteuer"
+      },
+      "konzessionsabgabe": {
+        "name": "Konzessionsabgabe"
+      },
+      "lieferant_aufschlag": {
+        "name": "Lieferantenaufschlag"
+      },
+      "mwst": {
+        "name": "Mehrwertsteuer"
+      },
+      "gesamtpreis_standard": {
+        "name": "Gesamtpreis Standard"
+      },
+      "gesamtpreis_modul3": {
+        "name": "Gesamtpreis Modul 3"
+      }
+    }
+  },
+  "exceptions": {
+    "kein_abgewiesener_wert": {
+      "message": "Kein abgewiesener Wert für {bestandteil} ab {gueltig_ab} vorhanden."
+    }
+  },
+  "services": {
+    "aktualisieren": {
+      "name": "Aktualisieren",
+      "description": "Preisblätter und Umlagen sofort neu abrufen."
+    },
+    "wert_uebernehmen": {
+      "name": "Wert übernehmen",
+      "description": "Einen wegen der Plausibilitätsgrenze abgewiesenen Wert trotzdem übernehmen.",
+      "fields": {
+        "bestandteil": {
+          "name": "Bestandteil",
+          "description": "Schlüssel des Bestandteils, z. B. modul3_ht"
+        },
+        "gueltig_ab": {
+          "name": "Gültig ab",
+          "description": "Stichtag des abgewiesenen Werts"
+        }
+      }
+    }
+  }
+}

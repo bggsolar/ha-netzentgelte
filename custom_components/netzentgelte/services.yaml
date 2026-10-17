@@ -1,0 +1,14 @@
+aktualisieren:
+
+wert_uebernehmen:
+  fields:
+    bestandteil:
+      required: true
+      example: modul3_ht
+      selector:
+        text:
+    gueltig_ab:
+      required: true
+      example: "2027-01-01"
+      selector:
+        date:
